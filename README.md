@@ -22,7 +22,7 @@ Styx is a simple reverse proxy written in Go.
 ## Contributors
 
 - [Adrien](https://github.com/AdrienVerdier) 😉
-- [Alexandre](https://github.com/TurpinA) 😁
+- [Alexandre](https://github.com/TurpinA) 🦍
 - [Guillaume](https://github.com/GuillaumeBchd) 😎
 
 
