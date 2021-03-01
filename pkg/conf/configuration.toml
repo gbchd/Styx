@@ -4,6 +4,9 @@ title = "Styx Configuration File"
 port = 80
 server_name = "my_url"
 
+[Default]
+default_route = "route par defaut"
+
 [[hosts]]
 name = "google"
 entrypoint = "url"

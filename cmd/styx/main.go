@@ -1,7 +1,21 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	
+	"github.com/guillaumebchd/styx/pkg/conf"
+)
 
 func main() {
-	fmt.Println("Hello World !")
+	server := conf.GetServerConfiguration()
+	fmt.Println(server.Port)
+	fmt.Println(server.ServerName)
+
+	ddos := conf.GetDDosConfiguration()
+	fmt.Println(ddos.MaxRequest)
+	fmt.Println(ddos.MaxRequestPerUser)
+	fmt.Println(ddos.VerificationTimer)
+
+	hosts := conf.GetHosts()
+	fmt.Println(hosts)
 }
