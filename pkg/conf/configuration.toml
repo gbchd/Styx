@@ -7,23 +7,20 @@ server_name = "my_url"
 [Default]
 default_route = "route par defaut"
 
-[[hosts]]
+[[sites]]
 name = "google"
 entrypoint = "url"
-ip = "8.8.8.8"
-port = 8080
+addresses = [ "127.0.0.1:8080", "127.0.0.1:8081"]
 
-[[hosts]]
+[[sites]]
 name = "localhost"
 entrypoint = "url"
-ip = "127.0.0.0"
-port = 3606
+addresses = [ "127.0.0.1:8080", "127.0.0.1:8081"]
 
-[[hosts]]
+[[sites]]
 name = "localhost2"
 entrypoint = "url"
-ip = "127.0.0.0"
-port = 8080
+addresses = [ "127.0.0.1:8080", "127.0.0.1:8081"]
 
 [DDOS_Parameters]
 max_request = 10000
