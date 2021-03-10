@@ -11,23 +11,21 @@ type ServerConfiguration struct {
 	ServerName string
 }
 
-// Host is a struct that represent a possible destination for the RVP
-// It contains the name of the host we want to access
+// Site is a struct that represent a possible destination for the RVP
+// It contains the name of the site we want to access
 // The entrypoint url that the user is going to try to access
-// The IP of the destination
-// The port of the destination
-type Host struct {
+// The addresses of the possible destinations
+type Site struct {
 	Name string
 	Entrypoint string
-	Ip string
-	Port int64
+	Addresses []interface{}
 }
 
-// Hosts is a struct that contains the default route in case we can't access the normal destination
-// and a list of host that the RVP can access
-type Hosts struct {
+// Sites is a struct that contains the default route in case we can't access the normal destination
+// and a list of site that the RVP can access
+type Sites struct {
 	Default string
-	HostList map[string]Host
+	SiteList map[string]Site
 }
 
 // DDosConfiguration contains all the parameters that we can need for our DDOS protection
@@ -50,32 +48,31 @@ func GetServerConfiguration() ServerConfiguration {
 	return conf
 }	
 
-// This method gets all the hosts that the rvp can reach from the configuration file
-func GetHosts() Hosts {
+// This method gets all the sites that the rvp can reach from the configuration file
+func GetSites() Sites {
 
 	config, _ := toml.LoadFile("../../pkg/conf/configuration.toml")
 
-	hostTree := config.Get("hosts").([]*toml.Tree)
+	siteTree := config.Get("sites").([]*toml.Tree)
 	def := config.Get("Default").(*toml.Tree)
 
-	list := make(map[string]Host)
+	list := make(map[string]Site)
 
-	for index := range hostTree {
-		host := Host{
-			Name: hostTree[index].Get("name").(string),
-			Entrypoint: hostTree[index].Get("entrypoint").(string),
-			Ip: hostTree[index].Get("ip").(string),
-			Port: hostTree[index].Get("port").(int64),
+	for index := range siteTree {
+		site := Site{
+			Name: siteTree[index].Get("name").(string),
+			Entrypoint: siteTree[index].Get("entrypoint").(string),
+			Addresses: siteTree[index].Get("addresses").([]interface{}),
 		}
-		list[hostTree[index].Get("name").(string)] = host
+		list[siteTree[index].Get("name").(string)] = site
 	}
 
-	hosts := Hosts{
+	sites := Sites{
 		Default: def.Get("default_route").(string),
-		HostList: list,
+		SiteList: list,
 	}
 
-	return hosts
+	return sites
 }
 
 // This method gets all the parameters that are going to be useful for the DDos protection

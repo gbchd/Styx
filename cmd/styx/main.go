@@ -16,6 +16,7 @@ func main() {
 	fmt.Println(ddos.MaxRequestPerUser)
 	fmt.Println(ddos.VerificationTimer)
 
-	hosts := conf.GetHosts()
-	fmt.Println(hosts)
+	sites := conf.GetSites()
+	fmt.Println(sites)
+	fmt.Println(sites.SiteList["google"].Addresses[0])
 }
