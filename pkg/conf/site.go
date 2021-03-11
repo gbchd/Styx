@@ -1,6 +1,9 @@
 package conf
 
-import "github.com/pelletier/go-toml"
+import (
+	"github.com/guillaumebchd/styx/pkg/entities"
+	"github.com/pelletier/go-toml"
+)
 
 // Site is a struct that represent a possible destination for the RVP
 // It contains the name of the site we want to access
@@ -8,8 +11,9 @@ import "github.com/pelletier/go-toml"
 // The addresses of the possible destinations
 type Site struct {
 	Name       string
-	Entrypoint string
-	Addresses  []interface{}
+	Route      entities.Route
+	Entrypoint string        // deprecated
+	Addresses  []interface{} // deprecated
 }
 
 // Sites is a struct that contains the default route in case we can't access the normal destination
@@ -29,7 +33,11 @@ func GetSites(config *toml.Tree) Sites {
 
 	for index := range siteTree {
 		site := Site{
-			Name:       siteTree[index].Get("name").(string),
+			Name: siteTree[index].Get("name").(string),
+			Route: entities.Route{
+				Entrypoint:   siteTree[index].Get("entrypoint").(string),
+				Destinations: siteTree[index].Get("addresses").([]string),
+			},
 			Entrypoint: siteTree[index].Get("entrypoint").(string),
 			Addresses:  siteTree[index].Get("addresses").([]interface{}),
 		}
