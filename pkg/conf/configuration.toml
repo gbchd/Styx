@@ -1,0 +1,28 @@
+title = "Styx Configuration File"
+
+[server]
+port = 80
+server_name = "my_url"
+
+[Default]
+default_route = "route par defaut"
+
+[[sites]]
+name = "google"
+entrypoint = "url"
+addresses = [ "127.0.0.1:8080", "127.0.0.1:8081"]
+
+[[sites]]
+name = "localhost"
+entrypoint = "url"
+addresses = [ "127.0.0.1:8080", "127.0.0.1:8081"]
+
+[[sites]]
+name = "localhost2"
+entrypoint = "url"
+addresses = [ "127.0.0.1:8080", "127.0.0.1:8081"]
+
+[DDOS_Parameters]
+max_request = 10000
+max_request_per_user = 100
+verification_timer = 180 #in seconds
