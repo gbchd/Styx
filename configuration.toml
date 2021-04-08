@@ -1,0 +1,26 @@
+title = "Styx Configuration File"
+
+[server]
+port = 8088
+server_name = "my_url"
+
+[Default]
+default_route = "amazon.com"
+
+[[sites]]
+name = "google"
+entrypoint = "localhost:8088"
+addresses = [ "google.com", "youtube.com"]
+
+
+[[sites]]
+name = "localhost"
+entrypoint = "127.0.0.1:8088"
+addresses = [ "facebook.com", "twitter.com"]
+
+
+
+[DDOS_Parameters]
+max_request = 10000
+max_request_per_user = 100
+verification_timer = 180 #in seconds

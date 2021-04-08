@@ -1,23 +1,48 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"time"
 
-	"golang.org/x/time/rate"
+	"github.com/gorilla/mux"
+	"github.com/guillaumebchd/styx/pkg/conf"
+	"github.com/guillaumebchd/styx/pkg/rvp"
+	"github.com/pelletier/go-toml"
 )
 
-var token_bucket_size int = 3
-var token_refresh_rate_per_second rate.Limit = 1
-
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", okHandler)
 
-	// Wrap the servemux with the limit middleware.
-	log.Println("Listening on :4000...")
-	//http.ListenAndServe(":4000", global_limit(mux))
-	http.ListenAndServe(":4000", user_limit(mux))
+	// We read our configuration file
+	configuration, err := toml.LoadFile("./configuration.toml")
+	if err != nil {
+		log.Fatal(err)
+	}
+	conf := conf.Get(configuration)
+
+	// We create our router
+	r := mux.NewRouter()
+
+	// We create our reverse proxy from our configuration object object
+	reverseProxy := rvp.GenerateProxy(conf.Sites)
+
+	// We capture all the paths and we redirect it to the reverse proxy
+	r.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		reverseProxy.ServeHTTP(w, r)
+	})
+
+	srv := &http.Server{
+		Handler:      r,
+		Addr:         fmt.Sprintf("0.0.0.0:%d", conf.Server.Port),
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+
+	fmt.Println("Starting server " + conf.Server.ServerName + " on : " + srv.Addr)
+	log.Fatal(srv.ListenAndServe())
+
+
 }
 
 func okHandler(w http.ResponseWriter, r *http.Request) {
