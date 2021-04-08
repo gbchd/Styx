@@ -8,6 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/guillaumebchd/styx/pkg/conf"
+	"github.com/guillaumebchd/styx/pkg/ddos"
 	"github.com/guillaumebchd/styx/pkg/rvp"
 	"github.com/pelletier/go-toml"
 )
@@ -32,6 +33,14 @@ func main() {
 		reverseProxy.ServeHTTP(w, r)
 	})
 
+	ddosProtect := ddos.New("GlobalLimit", 1, 2)
+
+	lambda := func(next http.Handler) http.Handler {
+		return ddos.Proctection(next, ddosProtect) //
+	}
+
+	r.Use(lambda)
+
 	srv := &http.Server{
 		Handler:      r,
 		Addr:         fmt.Sprintf("0.0.0.0:%d", conf.Server.Port),
@@ -41,7 +50,6 @@ func main() {
 
 	fmt.Println("Starting server " + conf.Server.ServerName + " on : " + srv.Addr)
 	log.Fatal(srv.ListenAndServe())
-
 
 }
 
