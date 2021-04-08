@@ -8,9 +8,9 @@ import (
 
 // Configuration holds all the parameters defined in our configuration file.
 type Configuration struct {
-	Server Server
+	Server       Server
 	ReverseProxy *model.ReverseProxy
-	DDos   DDos
+	DDos         DDos
 }
 
 // Get returns a Configuration object from a toml.tree
@@ -22,8 +22,8 @@ func Get(config *toml.Tree) Configuration {
 	reverseProxy := model.Create(def, sites)
 
 	return Configuration{
-		Server: server,
-		ReverseProxy:  reverseProxy,
-		DDos:   ddos,
+		Server:       server,
+		ReverseProxy: reverseProxy,
+		DDos:         ddos,
 	}
 }

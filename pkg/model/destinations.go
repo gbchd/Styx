@@ -6,7 +6,7 @@ type DestinationsPool struct {
 	Total_weight int
 }
 
-func (dp DestinationsPool) Get() *Destination {
+func (dp *DestinationsPool) Get() *Destination {
 
 	destination := dp.Destinations[dp.Current]
 

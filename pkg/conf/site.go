@@ -3,18 +3,19 @@ package conf
 import (
 	"net/url"
 	"sync"
+
 	"github.com/pelletier/go-toml"
 
 	"github.com/guillaumebchd/styx/pkg/model"
 )
 
 // GetSites gets all the sites that the rvp can reach from the configuration file
-func GetSites(config *toml.Tree) (model.Destination, map[string]model.Site) {
+func GetSites(config *toml.Tree) (model.Destination, map[string]*model.Site) {
 
 	siteTree := config.Get("sites").([]*toml.Tree)
 	def := config.Get("Default").(*toml.Tree)
 
-	sites := make(map[string]model.Site)
+	sites := make(map[string]*model.Site)
 
 	for index := range siteTree {
 
@@ -26,7 +27,7 @@ func GetSites(config *toml.Tree) (model.Destination, map[string]model.Site) {
 
 		var dest []*model.Destination
 
-		for i := 0 ; i < len(destinations) ; i++ {
+		for i := 0; i < len(destinations); i++ {
 			var m sync.RWMutex
 			url, _ := url.Parse(destinations[i])
 
@@ -47,12 +48,12 @@ func GetSites(config *toml.Tree) (model.Destination, map[string]model.Site) {
 		}
 
 		site := model.Site{
-			Name: 			  name,
-			Entrypoint: 	  entrypoint,
+			Name:             name,
+			Entrypoint:       entrypoint,
 			DestinationsPool: destPool,
 		}
 
-		sites[siteTree[index].Get("entrypoint").(string)] = site
+		sites[siteTree[index].Get("entrypoint").(string)] = &site
 	}
 
 	var m sync.RWMutex
@@ -69,8 +70,8 @@ func GetSites(config *toml.Tree) (model.Destination, map[string]model.Site) {
 }
 
 func Somme(l []int64) (somme int) {
-    for v := range l {
-        somme += v
-    }
-    return
+	for v := range l {
+		somme += v
+	}
+	return
 }
