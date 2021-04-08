@@ -8,6 +8,6 @@ import (
 type Destination struct {
 	URL    *url.URL
 	Alive  bool
-	weight int
-	mux    sync.RWMutex
+	Weight int64
+	Mux    *sync.RWMutex
 }

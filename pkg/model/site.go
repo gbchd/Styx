@@ -1,17 +1,21 @@
 package model
 
 type ReverseProxy struct {
-	Default string
+	Default Destination
 	Sites   map[string]Site
 }
 
 type Site struct {
+	Name string
 	Entrypoint string
 	DestinationsPool
 }
 
-func Create() *ReverseProxy {
-	return nil
+func Create(def Destination, sites map[string]Site) *ReverseProxy {
+	return &ReverseProxy{
+		Default: def,
+		Sites: sites,
+	}
 }
 
 func Get() *Destination {

@@ -41,5 +41,4 @@ func main() {
 
 	fmt.Println("Starting server " + conf.Server.ServerName + " on : " + srv.Addr)
 	log.Fatal(srv.ListenAndServe())
-
 }

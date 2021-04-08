@@ -1,19 +1,19 @@
 package model
 
 type DestinationsPool struct {
-	destinations []*Destination
-	current      int
-	total_weight int
+	Destinations []*Destination
+	Current      int
+	Total_weight int
 }
 
 func (dp DestinationsPool) Get() *Destination {
 
-	destination := dp.destinations[dp.current]
+	destination := dp.Destinations[dp.Current]
 
-	if dp.current >= len(dp.destinations)-1 {
-		dp.current = 0
+	if dp.Current >= len(dp.Destinations)-1 {
+		dp.Current = 0
 	} else {
-		dp.current++
+		dp.Current++
 	}
 
 	return destination

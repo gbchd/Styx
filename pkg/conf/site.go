@@ -1,55 +1,76 @@
 package conf
 
 import (
+	"net/url"
+	"sync"
 	"github.com/pelletier/go-toml"
+
+	"github.com/guillaumebchd/styx/pkg/model"
 )
 
-// Site is a struct that represent a possible destination for the RVP
-// It contains the name of the site we want to access
-// The entrypoint url that the user is going to try to access
-// The addresses of the possible destinations
-type Site struct {
-	Name         string
-	Entrypoint   string
-	Destinations []string
-}
-
-// Sites is a struct that contains the default route in case we can't access the normal destination
-// and a list of site that the RVP can access
-type Sites struct {
-	Default string
-	Map     map[string]Site // map[Entrypoint]Site
-
-	// We could add some attributes to overrides the header etc...
-	// but let's keep it simple for now
-}
-
 // GetSites gets all the sites that the rvp can reach from the configuration file
-func GetSites(config *toml.Tree) Sites {
+func GetSites(config *toml.Tree) (model.Destination, map[string]model.Site) {
 
 	siteTree := config.Get("sites").([]*toml.Tree)
 	def := config.Get("Default").(*toml.Tree)
 
-	sitesMap := make(map[string]Site)
+	sites := make(map[string]model.Site)
 
 	for index := range siteTree {
 
 		name := siteTree[index].Get("name").(string)
 		entrypoint := siteTree[index].Get("entrypoint").(string)
 		destinations := siteTree[index].GetArray("addresses").([]string)
+		alives := siteTree[index].GetArray("alives").([]bool)
+		weights := siteTree[index].GetArray("weights").([]int64)
 
-		site := Site{
-			Name:         name,
-			Entrypoint:   entrypoint,
-			Destinations: destinations,
+		var dest []*model.Destination
+
+		for i := 0 ; i < len(destinations) ; i++ {
+			var m sync.RWMutex
+			url, _ := url.Parse(destinations[i])
+
+			destination := model.Destination{
+				URL:    url,
+				Alive:  alives[i],
+				Weight: weights[i],
+				Mux:    &m,
+			}
+
+			dest = append(dest, &destination)
 		}
-		sitesMap[siteTree[index].Get("entrypoint").(string)] = site
+
+		destPool := model.DestinationsPool{
+			Destinations: dest,
+			Current:      0,
+			Total_weight: Somme(weights),
+		}
+
+		site := model.Site{
+			Name: 			  name,
+			Entrypoint: 	  entrypoint,
+			DestinationsPool: destPool,
+		}
+
+		sites[siteTree[index].Get("entrypoint").(string)] = site
 	}
 
-	sites := Sites{
-		Default: def.Get("default_route").(string),
-		Map:     sitesMap,
+	var m sync.RWMutex
+	def_url, _ := url.Parse(def.Get("default_route").(string))
+
+	defaut := model.Destination{
+		URL:    def_url,
+		Alive:  def.Get("alive").(bool),
+		Weight: def.Get("weight").(int64),
+		Mux:    &m,
 	}
 
-	return sites
+	return defaut, sites
+}
+
+func Somme(l []int64) (somme int) {
+    for v := range l {
+        somme += v
+    }
+    return
 }
