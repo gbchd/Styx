@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func Proctection(next http.Handler, ddosProtect *DDOSProtection) http.Handler {
+func (ddosProtect *DDOSProtection) Proctection(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		result := ddosProtect.CheckLimit(r)

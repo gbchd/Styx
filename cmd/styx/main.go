@@ -35,11 +35,7 @@ func main() {
 
 	ddosProtect := ddos.New("GlobalLimit", 1, 2)
 
-	lambda := func(next http.Handler) http.Handler {
-		return ddos.Proctection(next, ddosProtect) //
-	}
-
-	r.Use(lambda)
+	r.Use(ddosProtect.Proctection)
 
 	srv := &http.Server{
 		Handler:      r,
