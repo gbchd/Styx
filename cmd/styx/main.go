@@ -42,3 +42,7 @@ func main() {
 	fmt.Println("Starting server " + conf.Server.ServerName + " on : " + srv.Addr)
 	log.Fatal(srv.ListenAndServe())
 }
+
+func okHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("OK"))
+}
