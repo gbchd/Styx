@@ -34,9 +34,10 @@ func main() {
 		reverseProxy.ServeHTTP(w, r)
 	})
 
-	ddosProtect := ddos.New("GlobalLimit", rate.Limit(conf.DDos.RefreshRequestRate), conf.DDos.MaxRequestPerUser, conf.DDos.VerificationTimer)
-
-	r.Use(ddosProtect.Proctection)
+	if conf.DDos.Activate {
+		ddosProtect := ddos.New("GlobalLimit", rate.Limit(conf.DDos.RefreshRequestRate), conf.DDos.MaxRequestPerUser, conf.DDos.VerificationTimer)
+		r.Use(ddosProtect.Proctection)
+	}
 
 	srv := &http.Server{
 		Handler:      r,
