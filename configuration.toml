@@ -6,18 +6,23 @@ server_name = "my_url"
 
 [Default]
 default_route = "amazon.com"
+alive = true
+weight = 1
 
 [[sites]]
 name = "google"
 entrypoint = "localhost:8088"
-addresses = [ "google.com", "youtube.com"]
+addresses = [ "http://google.com", "http://youtube.com"]
+alives = [true, true]
+weights = [1, 1]
 
 
 [[sites]]
 name = "localhost"
 entrypoint = "127.0.0.1:8088"
-addresses = [ "facebook.com", "twitter.com"]
-
+addresses = [ "http://facebook.com", "http://twitter.com"]
+alives = [true, true]
+weights = [1, 1]
 
 
 [DDOS_Parameters]
