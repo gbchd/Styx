@@ -39,6 +39,11 @@ func main() {
 		r.Use(ddosProtect.Proctection)
 	}
 
+	// We set this value to 10000 to be able to test with wrk.
+	// Normally, we should keep the default value of 2 but we can't do our tests with it.
+	http.DefaultTransport.(*http.Transport).MaxIdleConns = 10000
+	http.DefaultTransport.(*http.Transport).MaxIdleConnsPerHost = 10000
+
 	srv := &http.Server{
 		Handler:      r,
 		Addr:         fmt.Sprintf("0.0.0.0:%d", conf.Server.Port),
