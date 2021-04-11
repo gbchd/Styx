@@ -4,6 +4,7 @@ import "github.com/pelletier/go-toml"
 
 // DDos contains all the parameters that we can need for our DDOS protection
 type DDos struct {
+	Activate           bool
 	RefreshRequestRate int
 	MaxRequestPerUser  int
 	VerificationTimer  int
@@ -16,6 +17,7 @@ func GetDDos(config *toml.Tree) DDos {
 	ddosConfig := config.Get("DDOS_Parameters").(*toml.Tree)
 
 	conf := DDos{
+		Activate:           ddosConfig.Get("activate").(bool),
 		MaxRequestPerUser:  int(ddosConfig.Get("max_request_per_user").(int64)),
 		RefreshRequestRate: int(ddosConfig.Get("refresh_request_rate").(int64)),
 		VerificationTimer:  int(ddosConfig.Get("verification_timer").(int64)),
