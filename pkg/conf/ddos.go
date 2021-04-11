@@ -16,9 +16,9 @@ func GetDDos(config *toml.Tree) DDos {
 	ddosConfig := config.Get("DDOS_Parameters").(*toml.Tree)
 
 	conf := DDos{
-		MaxRequestPerUser:  ddosConfig.Get("max_request_per_user").(int),
-		RefreshRequestRate: ddosConfig.Get("refresh_request_rate").(int),
-		VerificationTimer:  ddosConfig.Get("verification_timer").(int),
+		MaxRequestPerUser:  int(ddosConfig.Get("max_request_per_user").(int64)),
+		RefreshRequestRate: int(ddosConfig.Get("refresh_request_rate").(int64)),
+		VerificationTimer:  int(ddosConfig.Get("verification_timer").(int64)),
 	}
 
 	return conf
