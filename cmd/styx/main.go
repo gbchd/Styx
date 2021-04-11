@@ -8,8 +8,10 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/guillaumebchd/styx/pkg/conf"
+	"github.com/guillaumebchd/styx/pkg/ddos"
 	"github.com/guillaumebchd/styx/pkg/rvp"
 	"github.com/pelletier/go-toml"
+	"golang.org/x/time/rate"
 )
 
 func main() {
@@ -32,6 +34,10 @@ func main() {
 		reverseProxy.ServeHTTP(w, r)
 	})
 
+	ddosProtect := ddos.New("GlobalLimit", rate.Limit(conf.DDos.RefreshRequestRate), conf.DDos.MaxRequestPerUser, conf.DDos.VerificationTimer)
+
+	r.Use(ddosProtect.Proctection)
+
 	srv := &http.Server{
 		Handler:      r,
 		Addr:         fmt.Sprintf("0.0.0.0:%d", conf.Server.Port),
@@ -41,8 +47,4 @@ func main() {
 
 	fmt.Println("Starting server " + conf.Server.ServerName + " on : " + srv.Addr)
 	log.Fatal(srv.ListenAndServe())
-}
-
-func okHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("OK"))
 }

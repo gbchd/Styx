@@ -1,0 +1,36 @@
+2021/04/08 16:25:08 http: panic serving [::1]:61840: runtime error: invalid memory address or nil pointer dereference
+goroutine 55 [running]:
+net/http.(*conn).serve.func1(0xc0002de0a0)
+	C:/Program Files/Go/src/net/http/server.go:1824 +0x153
+panic(0x91f660, 0xb50af0)
+	C:/Program Files/Go/src/runtime/panic.go:971 +0x49a
+github.com/guillaumebchd/styx/pkg/ddos.Proctection.func1(0x9d5f50, 0xc0002f40e0, 0xc0002e8500)
+	C:/Users/alexa/OneDrive/Bureau/Styx/pkg/ddos/ddosHandler.go:24 +0x1c0
+net/http.HandlerFunc.ServeHTTP(0xc0002ee480, 0x9d5f50, 0xc0002f40e0, 0xc0002e8500)
+	C:/Program Files/Go/src/net/http/server.go:2069 +0x4b
+github.com/gorilla/mux.(*Router).ServeHTTP(0xc000164000, 0x9d5f50, 0xc0002f40e0, 0xc0002e8300)
+	C:/Users/alexa/go/pkg/mod/github.com/gorilla/mux@v1.8.0/mux.go:210 +0xe5
+net/http.serverHandler.ServeHTTP(0xc000166000, 0x9d5f50, 0xc0002f40e0, 0xc0002e8300)
+	C:/Program Files/Go/src/net/http/server.go:2887 +0xaa
+net/http.(*conn).serve(0xc0002de0a0, 0x9d6460, 0xc0002ee200)
+	C:/Program Files/Go/src/net/http/server.go:1952 +0x8cd
+created by net/http.(*Server).Serve
+	C:/Program Files/Go/src/net/http/server.go:3013 +0x3b8
+2021/04/08 16:25:09 http: panic serving [::1]:61883: runtime error: invalid memory address or nil pointer dereference
+goroutine 180 [running]:
+net/http.(*conn).serve.func1(0xc0003ea460)
+	C:/Program Files/Go/src/net/http/server.go:1824 +0x153
+panic(0x91f660, 0xb50af0)
+	C:/Program Files/Go/src/runtime/panic.go:971 +0x49a
+github.com/guillaumebchd/styx/pkg/ddos.Proctection.func1(0x9d5f50, 0xc0000a4000, 0xc0000a0200)
+	C:/Users/alexa/OneDrive/Bureau/Styx/pkg/ddos/ddosHandler.go:24 +0x1c0
+net/http.HandlerFunc.ServeHTTP(0xc000214140, 0x9d5f50, 0xc0000a4000, 0xc0000a0200)
+	C:/Program Files/Go/src/net/http/server.go:2069 +0x4b
+github.com/gorilla/mux.(*Router).ServeHTTP(0xc000164000, 0x9d5f50, 0xc0000a4000, 0xc0000a0000)
+	C:/Users/alexa/go/pkg/mod/github.com/gorilla/mux@v1.8.0/mux.go:210 +0xe5
+net/http.serverHandler.ServeHTTP(0xc000166000, 0x9d5f50, 0xc0000a4000, 0xc0000a0000)
+	C:/Program Files/Go/src/net/http/server.go:2887 +0xaa
+net/http.(*conn).serve(0xc0003ea460, 0x9d6460, 0xc000214000)
+	C:/Program Files/Go/src/net/http/server.go:1952 +0x8cd
+created by net/http.(*Server).Serve
+	C:/Program Files/Go/src/net/http/server.go:3013 +0x3b8

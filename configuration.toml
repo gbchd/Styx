@@ -26,6 +26,6 @@ weights = [1, 1]
 
 
 [DDOS_Parameters]
-max_request = 10000
+refresh_request_rate = 50 # rate request allow per second
 max_request_per_user = 100
-verification_timer = 180 #in seconds
+verification_timer = 180 # in seconds
