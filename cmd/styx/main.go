@@ -11,6 +11,7 @@ import (
 	"github.com/guillaumebchd/styx/pkg/ddos"
 	"github.com/guillaumebchd/styx/pkg/rvp"
 	"github.com/pelletier/go-toml"
+	"golang.org/x/time/rate"
 )
 
 func main() {
@@ -33,7 +34,7 @@ func main() {
 		reverseProxy.ServeHTTP(w, r)
 	})
 
-	ddosProtect := ddos.New("GlobalLimit", 1, 2)
+	ddosProtect := ddos.New("GlobalLimit", rate.Limit(conf.DDos.RefreshRequestRate), conf.DDos.MaxRequestPerUser, conf.DDos.VerificationTimer)
 
 	r.Use(ddosProtect.Proctection)
 
@@ -46,8 +47,4 @@ func main() {
 
 	fmt.Println("Starting server " + conf.Server.ServerName + " on : " + srv.Addr)
 	log.Fatal(srv.ListenAndServe())
-}
-
-func okHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("OK"))
 }

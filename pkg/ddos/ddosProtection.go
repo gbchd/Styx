@@ -25,7 +25,7 @@ type DDOSProtection struct {
 	tokenBucketSize           int
 }
 
-func New(typeProtection string, tokenRefreshRatePerSecond rate.Limit, tokenBucketSize int) *DDOSProtection {
+func New(typeProtection string, tokenRefreshRatePerSecond rate.Limit, tokenBucketSize int, refreshVisitors int) *DDOSProtection {
 	ddosProtection := new(DDOSProtection)
 	ddosProtection.typeProtection = typeProtection
 	ddosProtection.globalLimiter = rate.NewLimiter(tokenRefreshRatePerSecond, tokenBucketSize)
@@ -33,7 +33,7 @@ func New(typeProtection string, tokenRefreshRatePerSecond rate.Limit, tokenBucke
 	ddosProtection.tokenBucketSize = tokenBucketSize
 
 	if typeProtection == "UserLimit" {
-		go ddosProtection.cleanupVisitors(3)
+		go ddosProtection.cleanupVisitors(refreshVisitors)
 		ddosProtection.visitors = make(map[string]*visitor)
 	}
 
@@ -65,7 +65,7 @@ func (dd *DDOSProtection) cleanupVisitors(refreshTime int) {
 
 		dd.mu.Lock()
 		for ip, v := range dd.visitors {
-			if time.Since(v.lastSeen) > time.Duration(refreshTime)*time.Minute {
+			if time.Since(v.lastSeen) > time.Duration(refreshTime)*time.Second {
 				delete(dd.visitors, ip)
 			}
 		}

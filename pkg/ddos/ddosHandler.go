@@ -1,7 +1,6 @@
 package ddos
 
 import (
-	"log"
 	"net/http"
 )
 
@@ -13,7 +12,6 @@ func (ddosProtect *DDOSProtection) Proctection(next http.Handler) http.Handler {
 		if result == nil {
 			next.ServeHTTP(w, r)
 		} else {
-			log.Printf(result.Error())
 			switch result.Error() {
 			case "InternalServerError":
 				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
