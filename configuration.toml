@@ -1,0 +1,22 @@
+[server]
+port = 80
+server_name = "DefaultName"
+
+[Default]
+default_route = "http://localhost:8080"
+alive = true
+weight = 1
+
+[[sites]]
+name = "Webservice"
+entrypoint = "my_webservice.domain.com"
+addresses = [ "http://webservice_1", "http://webservice_2"]
+alives = [true, true]
+weights = [1, 1]
+
+[DDOS_Parameters]
+activate = true
+type = "UserLimit" # Two types available : UserLimit, GlobalLimit
+refresh_request_rate = 50 # rate request allow per second
+max_request_per_user = 100
+verification_timer = 180 # in seconds
