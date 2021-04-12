@@ -11,11 +11,20 @@ import (
 	"golang.org/x/time/rate"
 )
 
+// Struct that define a visitor
+// limiter contains the number of request he can do
+// lastSeen is the timestamp of his last request
 type visitor struct {
 	limiter  *rate.Limiter
 	lastSeen time.Time
 }
 
+// Struct that define the DDOSProtection
+// globalLimiter contains the number of request available for the RVP
+// visitors is the map of visitor
+// mu is the mutex for writing in the visitor map
+// tokenRefreshRatePerSecond refresh request number rate per second
+// tokenBucketSize number of request available for a new visitor
 type DDOSProtection struct {
 	typeProtection            string
 	globalLimiter             *rate.Limiter
@@ -25,6 +34,8 @@ type DDOSProtection struct {
 	tokenBucketSize           int
 }
 
+// We create the DDOSProtection struct and initialize it with the parameters.
+// If the protection type is UserLimit we start the cleanupVisitors thread
 func New(typeProtection string, tokenRefreshRatePerSecond rate.Limit, tokenBucketSize int, refreshVisitors int) *DDOSProtection {
 	ddosProtection := new(DDOSProtection)
 	ddosProtection.typeProtection = typeProtection
@@ -40,6 +51,7 @@ func New(typeProtection string, tokenRefreshRatePerSecond rate.Limit, tokenBucke
 	return ddosProtection
 }
 
+// Function that check if the user is already save in the map and save his new timestamp
 func (dd *DDOSProtection) getVisitor(ip string) *rate.Limiter {
 	dd.mu.Lock()
 	defer dd.mu.Unlock()
@@ -73,6 +85,7 @@ func (dd *DDOSProtection) cleanupVisitors(refreshTime int) {
 	}
 }
 
+// Check if the user is allow to send a new request with his limiter
 func (dd *DDOSProtection) userLimit(r *http.Request) error {
 	ip, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
@@ -88,6 +101,7 @@ func (dd *DDOSProtection) userLimit(r *http.Request) error {
 	return nil
 }
 
+// Check if the user is allow to send a new request with the global limiter
 func (dd *DDOSProtection) globalLimit() error {
 	if !dd.globalLimiter.Allow() {
 		return errors.New("StatusTooManyRequests")
@@ -96,6 +110,7 @@ func (dd *DDOSProtection) globalLimit() error {
 	return nil
 }
 
+// this function call the verification method based on the type protection
 func (dd *DDOSProtection) CheckLimit(r *http.Request) error {
 	if dd.typeProtection == "UserLimit" {
 		return dd.userLimit(r)
