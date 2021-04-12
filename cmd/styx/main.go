@@ -35,7 +35,7 @@ func main() {
 	})
 
 	if conf.DDos.Activate {
-		ddosProtect := ddos.New("GlobalLimit", rate.Limit(conf.DDos.RefreshRequestRate), conf.DDos.MaxRequestPerUser, conf.DDos.VerificationTimer)
+		ddosProtect := ddos.New(conf.DDos.Type, rate.Limit(conf.DDos.RefreshRequestRate), conf.DDos.MaxRequestPerUser, conf.DDos.VerificationTimer)
 		r.Use(ddosProtect.Proctection)
 	}
 
