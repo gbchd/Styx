@@ -1,29 +1,18 @@
-title = "Styx Configuration File"
-
 [server]
-port = 8088
-server_name = "my_url"
+port = 80
+server_name = "DefaultName"
 
 [Default]
-default_route = "amazon.com"
+default_route = "http://localhost:8080"
 alive = true
 weight = 1
 
 [[sites]]
-name = "google"
-entrypoint = "localhost:8088"
-addresses = [ "http://google.com", "http://youtube.com"]
+name = "Webservice"
+entrypoint = "my_webservice.domain.com"
+addresses = [ "http://webservice_1", "http://webservice_2"]
 alives = [true, true]
 weights = [1, 1]
-
-
-[[sites]]
-name = "localhost"
-entrypoint = "127.0.0.1:8088"
-addresses = [ "http://facebook.com", "http://twitter.com"]
-alives = [true, true]
-weights = [1, 1]
-
 
 [DDOS_Parameters]
 activate = true
