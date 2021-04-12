@@ -27,6 +27,7 @@ weights = [1, 1]
 
 [DDOS_Parameters]
 activate = true
+type = "UserLimit" # Two types available : UserLimit, GlobalLimit
 refresh_request_rate = 50 # rate request allow per second
 max_request_per_user = 100
 verification_timer = 180 # in seconds
